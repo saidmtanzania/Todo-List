@@ -15,21 +15,37 @@ mongoose.connect('mongodb://localhost:27017/todolistDB',{useNewUrlParser:true});
 const itemSchema ={
   name:String
 };
+const listSchema = {
+  name:String,
+  items:[itemSchema]
+};
+const List = mongoose.model("List",listSchema);
 const Item = mongoose.model("Item",itemSchema);
 
 app.get("/", function(req, res) {
   Item.find({},(err,result)=>{
-  if(err){
-    console.log(err);
-  }else{
-    res.render("list", {listTitle: "Today", newListItems: result});
-  }
+  if(!err){
+    res.render("list", {listTitle: "Today", newListItems: result});}
 });
-
 });
-
+app.get("/:customListname",(req,res)=>{
+  const customListName = req.params.customListname;
+  List.findOne({name:customListName},(err,result)=>{
+    if(!err){
+      if(!result){
+        const list = new List({
+          name:customListName,
+          items:pool
+        });
+        list.save();
+        res.redirect("/"+customListName);
+      }else{
+        res.render("list",{listTitle: result.name, newListItems: result.items});
+      }
+    }
+  });
+});
 app.post("/", function(req, res){
-
   const item = req.body.newItem;
   const insert = new Item({
   name:item
