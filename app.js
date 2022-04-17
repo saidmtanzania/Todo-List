@@ -18,7 +18,7 @@ const itemSchema ={
 const Item = mongoose.model("Item",itemSchema);
 
 app.get("/", function(req, res) {
-  Item.find({},{_id:0,__v:0},(err,result)=>{
+  Item.find({},(err,result)=>{
   if(err){
     console.log(err);
   }else{
@@ -31,17 +31,23 @@ app.get("/", function(req, res) {
 app.post("/", function(req, res){
 
   const item = req.body.newItem;
-
-  if (req.body.list === "Work") {
-    workItems.push(item);
-    res.redirect("/work");
-  } else {
-    const insert = new Item({
+  const insert = new Item({
   name:item
   });
   insert.save();
-    res.redirect("/");
-  }
+  res.redirect("/");
+});
+
+app.post("/delete", (req,res)=>{
+  const checkedvalue = req.body.checkbox;
+  Item.findByIdAndRemove(checkedvalue,(err)=>{
+    if(err){
+      console.log(err);
+    }else{
+      console.log("Successfully deleted");
+    }
+  });
+  res.redirect("/");
 });
 
 app.get("/work", function(req,res){
