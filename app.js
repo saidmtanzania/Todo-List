@@ -31,7 +31,7 @@ app.get("/", function(req, res) {
 });
  const newItem = new Item({
   name:"default",
-  items:"Pop"
+  items:"unknown"
   });
 app.get("/:customListname",(req,res)=>{
   const customListName = _.capitalize(req.params.customListname);
@@ -58,7 +58,7 @@ app.post("/", function(req, res){
   const insert = new Item({
   name:item
   });
-  
+
   if(listName === "Today"){
     insert.save();
     res.redirect("/");
