@@ -71,18 +71,21 @@ app.post("/", function(req, res){
 
 app.post("/delete", (req,res)=>{
   const checkedvalue = req.body.checkbox;
-  const listNnames = req.vody.listName;
+  const lname = req.body.listName;
 
-  if( listNnames === "Today"){
+  if( lname === "Today"){
     Item.findByIdAndRemove(checkedvalue,(err)=>{
     if(!err){
         res.redirect("/");
     }
   });  
   }else{
-    
+    List.findOneAndUpdate({name: lname},{$pull:{items:{_id:checkedvalue}}}, (err,foundList)=>{
+      if(!err){
+        res.redirect("/"+ lname);
+      }
+    });
   }
-  
 });
 
 app.get("/about", function(req, res){
