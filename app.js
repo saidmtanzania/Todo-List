@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const app = express();
 
@@ -33,7 +34,7 @@ app.get("/", function(req, res) {
   items:"Pop"
   });
 app.get("/:customListname",(req,res)=>{
-  const customListName = req.params.customListname;
+  const customListName = _.capitalize(req.params.customListname);
   List.findOne({name:customListName},(err,result)=>{
     if(!err){
       if(!result){
@@ -57,6 +58,7 @@ app.post("/", function(req, res){
   const insert = new Item({
   name:item
   });
+  
   if(listName === "Today"){
     insert.save();
     res.redirect("/");
