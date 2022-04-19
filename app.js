@@ -67,16 +67,22 @@ app.post("/", function(req, res){
       res.redirect("/" + listName);
     });
   }
-  
 });
 
 app.post("/delete", (req,res)=>{
   const checkedvalue = req.body.checkbox;
-  Item.findByIdAndRemove(checkedvalue,(err)=>{
+  const listNnames = req.vody.listName;
+
+  if( listNnames === "Today"){
+    Item.findByIdAndRemove(checkedvalue,(err)=>{
     if(!err){
         res.redirect("/");
     }
-  });
+  });  
+  }else{
+    
+  }
+  
 });
 
 app.get("/about", function(req, res){
