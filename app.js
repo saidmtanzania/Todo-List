@@ -28,6 +28,10 @@ app.get("/", function(req, res) {
     res.render("list", {listTitle: "Today", newListItems: result});}
 });
 });
+ const newItem = new Item({
+  name:"default",
+  items:"Pop"
+  });
 app.get("/:customListname",(req,res)=>{
   const customListName = req.params.customListname;
   List.findOne({name:customListName},(err,result)=>{
@@ -35,7 +39,7 @@ app.get("/:customListname",(req,res)=>{
       if(!result){
         const list = new List({
           name:customListName,
-          items:pool
+          items:newItem
         });
         list.save();
         res.redirect("/"+customListName);
@@ -45,13 +49,25 @@ app.get("/:customListname",(req,res)=>{
     }
   });
 });
+
 app.post("/", function(req, res){
   const item = req.body.newItem;
+  const listName = req.body.list;
+
   const insert = new Item({
   name:item
   });
-  insert.save();
-  res.redirect("/");
+  if(listName === "Today"){
+    insert.save();
+    res.redirect("/");
+  }else{
+    List.findOne({name:listName},(err,foundList)=>{
+      foundList.items.push(insert);
+      foundList.save();
+      res.redirect("/" + listName);
+    });
+  }
+  
 });
 
 app.post("/delete", (req,res)=>{
@@ -62,6 +78,7 @@ app.post("/delete", (req,res)=>{
     }
   });
 });
+
 app.get("/about", function(req, res){
   res.render("about");
 });
