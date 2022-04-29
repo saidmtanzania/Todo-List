@@ -5,4 +5,4 @@
 
 [Click Here To OPEN](https://secret-sierra-38998.herokuapp.com/)
 
-#### FUll Funtonal
+#### Full functional TodoList WebApp.
